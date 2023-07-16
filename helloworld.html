@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Message Encryption and Decryption</title>
+    <style>
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        button {
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <b><h2>Message Encryption and Decryption</h2></b>
+        <label for="inputMessage">Enter a message:</label>
+        <textarea id="inputMessage"></textarea>
+        <button onclick="encryptMessage()">Encrypt</button>
+        <label for="encryptedMessage">Encrypted message:</label>
+        <textarea id="encryptedMessage" readonly></textarea><br><br><br>
+        <label for="inputEncryptedMessage">Enter an encrypted message:</label>
+        <textarea id="inputEncryptedMessage"></textarea>
+        <button onclick="decryptMessage()">Decrypt</button>
+        <label for="decryptedMessage">Decrypted message:</label>
+        <textarea id="decryptedMessage" readonly></textarea>
+    </div>
+
+    <script>
+        function encryptMessage() {
+            var inputMessage = document.getElementById("inputMessage").value;
+            var encryptedMessage = encrypt(inputMessage);
+            document.getElementById("encryptedMessage").value = encryptedMessage;
+        }
+
+        function decryptMessage() {
+            var inputEncryptedMessage = document.getElementById("inputEncryptedMessage").value;
+            var decryptedMessage = decrypt(inputEncryptedMessage);
+            document.getElementById("decryptedMessage").value = decryptedMessage;
+        }
+
+        function encrypt(message) {
+            var encrypted = '';
+            var wordCount = 1;
+
+            for (var i = 0; i < message.length; i++) {
+                var ch = message.charAt(i);
+
+                // Increment the encryption key for each word
+                if (/\s/.test(ch)) {
+                    wordCount++;
+                }
+
+                var key = wordCount % 26;
+
+                // Encrypt uppercase letters
+                if (/[A-Z]/.test(ch)) {
+                    var encryptedChar = String.fromCharCode((ch.charCodeAt(0) - 65 + key) % 26 + 65);
+                    encrypted += encryptedChar;
+                }
+                // Encrypt lowercase letters
+                else if (/[a-z]/.test(ch)) {
+                    var encryptedChar = String.fromCharCode((ch.charCodeAt(0) - 97 + key) % 26 + 97);
+                    encrypted += encryptedChar;
+                }
+                // Leave non-alphabetic characters unchanged
+                else {
+                    encrypted += ch;
+                }
+            }
+
+            return encrypted;
+        }
+
+        function decrypt(encryptedMessage) {
+            var decrypted = '';
+            var wordCount = 1;
+
+            for (var i = 0; i < encryptedMessage.length; i++) {
+                var ch = encryptedMessage.charAt(i);
+
+                // Increment the decryption key for each word
+                if (/\s/.test(ch)) {
+                    wordCount++;
+                }
+
+                var key = wordCount % 26;
+
+                // Decrypt uppercase letters
+                if (/[A-Z]/.test(ch)) {
+                    var decryptedChar = String.fromCharCode((ch.charCodeAt(0) - 65 - key + 26) % 26 + 65);
+                    decrypted += decryptedChar;
+                }
+                // Decrypt lowercase letters
+                else if (/[a-z]/.test(ch)) {
+                    var decryptedChar = String.fromCharCode((ch.charCodeAt(0) - 97 - key + 26) % 26 + 97);
+                    decrypted += decryptedChar;
+                }
+                // Leave non-alphabetic characters unchanged
+                else {
+                    decrypted += ch;
+                }
+            }
+
+            return decrypted;
+        }
+    </script>
+</body>
+</html>
